@@ -1,6 +1,6 @@
 {
   "name": "private-static-website",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Easily host a private web site authenticated by email address only",
   "main": "index.js",
   "scripts": {
