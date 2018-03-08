@@ -38,5 +38,8 @@
     "random-uuid-v4": "0.0.6",
     "socket.io": "1.7.2",
     "socket.io-client": "1.7.2"
+  },
+  "devDependencies": {
+    "browserify": "16.1.1"
   }
 }
