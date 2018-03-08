@@ -4,6 +4,7 @@
   "description": "Easily host a private web site authenticated by email address only",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install -no-save browserify && npm run build",
     "testserver": "npm run build && node test/server.js",
     "build": "browserify public/login.js -o public/build.js",
     "prepublish": "npm run build"
