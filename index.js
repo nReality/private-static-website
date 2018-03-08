@@ -53,6 +53,13 @@ module.exports = function(options, server) {
 		return !!usersWithAccess[emailAddress.toLowerCase()]
 	}
 
+	function onLogin(credentials) {
+		console.log('login attempt for %s', credentials.email);
+		if (options.onLogin) {
+			options.onLogin(options, credentials);
+		}
+	}
+
 	const serveContentFromRepo = ecstatic({
 		root: options.privateContentPath,
 		autoIndex: true,
@@ -74,7 +81,7 @@ module.exports = function(options, server) {
 			httpHandler({ serveContentFromRepo, servePublicContent, io, jlc, sessionState, userHasAccess, domain: options.domain }, req, res)
 		}
 	})
-	io.on('connection', socket => socketHandler({ jlc, sessionState, userHasAccess, socket }))
+	io.on('connection', socket => socketHandler({ jlc, sessionState, userHasAccess, socket, onLogin }))
 
 	server.updateUsers = function updateUsers(contents) {
 		try {
@@ -157,7 +164,7 @@ function httpHandler({ serveContentFromRepo, servePublicContent, io, jlc, sessio
 	}
 }
 
-function socketHandler({ jlc, sessionState, userHasAccess, socket }) {
+function socketHandler({ jlc, sessionState, userHasAccess, socket, onLogin }) {
 	const sessionId = new Cookie(socket.request).get(sessionCookieId)
 	if (sessionId) {
 		socket.join(sessionId)
@@ -180,6 +187,8 @@ function socketHandler({ jlc, sessionState, userHasAccess, socket }) {
 					} else {
 						console.error('error?!?!?!', err.message || err)
 					}
+				} else {
+					onLogin(credentials);
 				}
 			})
 		}
