@@ -41,13 +41,15 @@ module.exports = function(options, server) {
 
 	justLoginDebouncer(jlc, debounceDb)
 
-	emailer(jlc, {
-		createHtmlEmail: options.getEmailText,
-		transport: options.transportOptions,
-		mail: options.defaultMailOptions
-	}).on('error', err => {
-		console.error('Error sending email!', err && err.message)
-	})
+	if (options.sendEmail !== false) {
+		emailer(jlc, {
+			createHtmlEmail: options.getEmailText,
+			transport: options.transportOptions,
+			mail: options.defaultMailOptions
+		}).on('error', err => {
+			console.error('Error sending email!', err && err.message)
+		})
+	}
 
 	function userHasAccess(emailAddress) {
 		return !!usersWithAccess[emailAddress.toLowerCase()]
